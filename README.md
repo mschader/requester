@@ -9,7 +9,7 @@ The script wants to achieve two basic aspects:
 ## Installation
 
 ```bash
-git clone 
+git clone https://github.com/mschader/requester.git
 cd requester
 python setup.py sdist
 pip3 install dist/* --user
@@ -18,7 +18,7 @@ pip3 install dist/* --user
 ## Usage
 
 ```python
-python requester.py --help
+requester --help
 Usage: requester.py [OPTIONS]
 
 Options:
