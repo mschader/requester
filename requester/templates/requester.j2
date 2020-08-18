@@ -1,0 +1,29 @@
+import requests{% if charlist %}
+import string{% endif %}
+
+requests.packages.urllib3.disable_warnings(requests.packages.urllib3.exceptions.InsecureRequestWarning)
+
+url = "{{ url }}"{% if proxy %}
+proxies = {"http": "http://{{ proxy }}", "https": "https://{{ proxy }}"}{% endif %}{% if charlist %}
+chars = string.printable{% endif %}{% if cookie %}
+cookies = dict(){% for c in cookie %}
+cookies.update({{ c.replace('=', '="', 1) + '"' }}){% endfor %}{% endif %}{% if wordlist %}
+
+with open("{{ wordlist }}", "r") as f:
+    words = f.read().splitlines(){% endif %}
+
+# Here comes the request \o/
+r = requests.get(url{% if noverify %}, verify=False{% endif %}{% if proxy %}, proxies=proxies{% endif %}{% if cookie %}, cookies=cookies{% endif %}){% if filter %}
+
+if "{{ filter }}" in r.text:
+    # TODO: apply logic what to do now that the filter value is present
+    print("[+] Filter value found"){% endif %}{% if verbose %}
+
+def format_text(text):
+    section_break = f"{'*'*65}\n"
+    return f"{section_break}{text}"
+
+print(format_text(f"Status Code: {r.status_code}"))
+print(format_text(f"Headers: {r.headers}"))
+print(format_text(f"Cookies: {r.cookies}"))
+print(format_text(f"Content: {r.text[:80]}[.......]")){% endif %}
